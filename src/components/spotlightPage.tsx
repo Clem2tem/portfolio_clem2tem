@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 export function SpotlightPage() {
     return (
         <>
-        <main className="ml-[-120px] relative h-[550px] flex flex-col justify-center bg-slate-950 overflow-visible">
+        <main className="ml-[30px] mt-[-50px] relative h-[550px] flex flex-col justify-center  overflow-visible">
           <Spotlight className=" max-w-sm mx-auto grid gap-8 lg:grid-cols-2 items-start lg:max-w-none group">
               {/* Card #1 */}
               <motion.div

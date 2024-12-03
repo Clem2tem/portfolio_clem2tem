@@ -85,8 +85,8 @@ const Highlight: React.FC = () => {
       }}
       animate={{
         scale: [1.5, 0.9, 1], // Rétrécit, puis revient à la taille normale
-        x: ['-10%', '-10%', '0%'], // Bouge légèrement horizontalement
-        y: ['20%', '20%', '0%'], // Bouge légèrement verticalement
+        x: ['-50%', '-50%', '0%'], // Bouge légèrement horizontalement
+        y: ['30%', '30%', '0%'], // Bouge légèrement verticalement
       }}
       transition={{
         delay: 1,
