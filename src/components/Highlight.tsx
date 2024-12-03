@@ -8,6 +8,7 @@ const Highlight: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null); // Conteneur global
   const cardRef = useRef<HTMLDivElement>(null); // Carte contenant les halos
   const [enableMouseTracking, setEnableMouseTracking] = useState(false); // État pour activer/désactiver le suivi de la souris
+  const [rotationEnabled, setRotationEnabled] = useState(false); // État pour activer/désactiver la rotation
 
   // Active la détection de la souris après 1.5 secondes
   useEffect(() => {
@@ -43,36 +44,52 @@ const Highlight: React.FC = () => {
 
   // Rotation dynamique en fonction de la position de la souris
   useEffect(() => {
-    const handleMouseMove = (event: MouseEvent) => {
-      if (cardRef.current && enableMouseTracking) {
-        const rect = cardRef.current.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2; // Centre horizontal
-        const centerY = rect.top + rect.height / 2; // Centre vertical
+  const handleMouseMove = (event: MouseEvent) => {
+    if (cardRef.current && enableMouseTracking && rotationEnabled) {
+      const rect = cardRef.current.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
 
-        const deltaX = event.clientX - centerX; // Distance par rapport au centre en X
-        const deltaY = event.clientY - centerY; // Distance par rapport au centre en Y
+      const deltaX = event.clientX - centerX;
+      const deltaY = event.clientY - centerY;
 
-        const rotateX = deltaY / 20; // Sensibilité verticale
-        const rotateY = -deltaX / 20; // Sensibilité horizontale
+      const rotateX = deltaY / 20; // Sensibilité verticale
+      const rotateY = -deltaX / 20; // Sensibilité horizontale
 
-        // Applique la rotation via GSAP
-        gsap.to(cardRef.current, {
-          rotationX: rotateX,
-          rotationY: rotateY,
-          duration: 0.2, // Transition fluide
-          ease: 'power2.out',
-        });
-      }
-    };
+      // Calcul dynamique de l'échelle
+      const scaleX = 1 + Math.abs(deltaX) / rect.width * 0.1; // Échelle horizontale dynamique
+      const scaleY = 1 + Math.abs(deltaY) / rect.height * 0.1; // Échelle verticale dynamique
 
-    if (enableMouseTracking) {
-      window.addEventListener('mousemove', handleMouseMove);
+      // Applique la transformation via GSAP
+      gsap.to(cardRef.current, {
+        rotationX: rotateX,
+        rotationY: rotateY,
+        scaleX, // Applique l'échelle horizontale
+        scaleY, // Applique l'échelle verticale
+        duration: 0.2, // Transition fluide
+        ease: 'power2.out',
+      });
     }
+  };
 
-    return () => {
+  if (enableMouseTracking) {
+    if (rotationEnabled) {
+      window.addEventListener('mousemove', handleMouseMove);
+    } else {
       window.removeEventListener('mousemove', handleMouseMove);
-    };
-  }, [enableMouseTracking]);
+    }
+  }
+
+  return () => {
+    window.removeEventListener('mousemove', handleMouseMove);
+  };
+}, [enableMouseTracking, rotationEnabled]);
+
+
+  // Fonction pour activer/désactiver la rotation en cliquant sur la carte
+  const toggleRotation = () => {
+    setRotationEnabled((prev) => !prev); // Basculer l'état
+  };
 
   return (
     <motion.div
@@ -98,6 +115,7 @@ const Highlight: React.FC = () => {
       {/* Carte contenant les halos */}
       <div
         ref={cardRef}
+        onClick={toggleRotation} // Basculer l'état sur clic
         className="highlight h-[50vh] max-w-[20vw] relative bg-slate-800 p-px overflow-hidden rounded-3xl"
         style={{
           transformStyle: 'preserve-3d', // Permet un rendu correct des transformations 3D
@@ -124,7 +142,7 @@ const Highlight: React.FC = () => {
         <img
           src="/images/peur.jpg" // Remplacez par le chemin vers votre image
           alt="Fashion Model"
-          className="highlight-image w-full h-full object-cover rounded-3xl z-10"
+          className="cursor-pointer highlight-image w-full h-full object-cover rounded-3xl z-10"
           draggable={false} // Désactive le comportement natif de drag
           onDragStart={(event) => event.preventDefault()} // Empêche le comportement par défaut
           style={{

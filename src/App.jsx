@@ -7,7 +7,7 @@ const App = () => {
   return (
   <>
   <body>
-    <div className="block">
+    <div className="relative block overflow-hidden w-full h-full">
     <SpotlightPage/>
     <SpotlightPageBottom/>
     </div>
