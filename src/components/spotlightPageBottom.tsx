@@ -9,8 +9,8 @@ import { motion } from "framer-motion";
 export function SpotlightPageBottom() {
     return (
         <>
-        <main className="ml-[30px] relative top-32 h-[30vh] lg:max-w-[95vw] flex flex-col justify-start items-start overflow-visible z-0">
-          <Spotlight className="w-full max-w-sm flex gap-8 items-start lg:max-w-[70vw] group">
+        <main className="ml-[30px] relative mt-[10vh] h-[30vh] lg:max-w-[95vw] flex flex-col justify-start items-start overflow-visible z-0">
+          <Spotlight className="w-full max-w-sm flex gap-[calc(10vh-65px)] items-start lg:max-w-[70vw] group">
               {/* Card #1 */}
               <motion.div
                 className="relative h-full opacity-0 rounded-[inherit] z-0 overflow-hidden"
